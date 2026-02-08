@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>موزّع الطلبة الذكي</title>
+
+  <style>
+    :root{
+      --primary:#0062AD;
+      --bg:#ffffff;
+      --soft:#f5f8fc;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border: rgba(15,23,42,.10);
+      --shadow: 0 12px 28px rgba(15,23,42,.08);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      direction: rtl;
+      background: radial-gradient(1100px 500px at 15% -10%, rgba(0,98,173,.12), transparent 55%),
+                  radial-gradient(900px 420px at 90% 0%, rgba(0,98,173,.08), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    /* ===== Header (اصغر) ===== */
+    .header{
+      background: linear-gradient(90deg, #043a62, var(--primary));
+      color:#fff;
+      padding: 10px 0;                 /* كان 16 */
+      box-shadow: 0 10px 22px rgba(0,0,0,.12);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header .wrap{
+      width: 1120px;
+      max-width: 96%;
+      margin: 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .logoBox{
+      width: 40px;                     /* كان 46 */
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .logoBox img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background:#fff;
+    }
+    .brandText{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      min-width:0;
+    }
+    .brandText .title{
+      font-weight: 900;
+      font-size: 18px;                 /* كان 18 */
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+   
+
+    /* ===== Subbar (أيقونات فقط بدون حدود) ===== */
+    .subbar{
+      background: transparent;
+      border-bottom: none;
+    }
+    .subbar .wrap{
+      width: 1120px;
+      max-width: 96%;
+      margin: 0 auto;
+      padding: 10px 0 0;               /* خليته خفيف */
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+
+    .nav{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+
+    /* زر أيقونة بسيط */
+    .iconBtn{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: none;                    /* بدون حدود */
+      background: transparent;         /* بدون كبسولة */
+      cursor:pointer;
+      user-select:none;
+      display:grid;
+      place-items:center;
+      font-size: 20px;
+      color: rgba(15,23,42,.60);       /* لون ساده */
+      transition: .12s;
+    }
+    .iconBtn:hover{
+      transform: translateY(-1px);
+      color: rgba(15,23,42,.85);
+    }
+    .iconBtn.active{
+      color: var(--primary);           /* يبين active بلون المشروع */
+      background: rgba(0,98,173,.10);  /* خلفية خفيفة جدا (مو حدود) */
+    }
+
+    /* زر الوضع الليلي نفس الفكرة */
+    .modeBtn{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: none;
+      background: transparent;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size: 20px;
+      color: rgba(15,23,42,.60);
+      transition:.12s;
+    }
+    .modeBtn:hover{ transform: translateY(-1px); color: rgba(15,23,42,.85); }
+    .modeBtn.active{ color: var(--primary); background: rgba(0,98,173,.10); }
+
+    /* ===== Page container ===== */
+    .page{
+      width: 1120px;
+      max-width: 96%;
+      margin: 18px auto 26px;
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      overflow:hidden;
+    }
+
+    /* message */
+    .msg{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,98,173,.18);
+      background: rgba(0,98,173,.08);
+      color: #043a62;
+      font-weight: 800;
+      line-height:1.6;
+      margin-bottom: 14px;
+    }
+    .msg .i{
+      width: 30px; height: 30px;
+      border-radius: 12px;
+      background: rgba(0,98,173,.10);
+      border: 1px solid rgba(0,98,173,.18);
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+    }
+
+    /* FIRST VIEW: upload card center */
+    .centerWrap{
+      display:flex;
+      justify-content:center;
+      margin-top: 16px;
+    }
+    .uploadCard{
+      width: min(720px, 100%);
+      text-align: center;
+      padding: 22px 18px;
+    }
+    .uploadIcon{
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 10px;
+      display:grid;
+      place-items:center;
+      font-size: 22px;
+      color:#043a62;
+    }
+
+    label{
+      display:block;
+      text-align:right;
+      font-weight:900;
+      font-size: 12px;
+      margin-bottom: 8px;
+      color: rgba(15,23,42,.85);
+    }
+    input[type="file"], select, input[type="number"]{
+      width:100%;
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      outline: none;
+      background:#fff;
+      font-weight: 800;
+      transition:.15s;
+    }
+    input[type="file"]:focus, select:focus, input[type="number"]:focus{
+      border-color: rgba(0,98,173,.45);
+      box-shadow: 0 0 0 4px rgba(0,98,173,.12);
+    }
+    .hint{
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    .btn{
+      border:0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      cursor:pointer;
+      background: linear-gradient(90deg, #043a62, var(--primary));
+      color:#fff;
+      font-weight: 900;
+      box-shadow: 0 12px 18px rgba(0,98,173,.16);
+      transition:.12s;
+    }
+    .btn:hover{ transform: translateY(-1px); }
+
+    /* after upload layout */
+    .afterGrid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+      align-items:start;
+      margin-top: 14px;
+    }
+    @media (max-width: 980px){
+      .afterGrid{ grid-template-columns: 1fr; }
+    }
+
+    .statsGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 12px;
+    }
+    .stat{
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(0,98,173,.08), rgba(255,255,255,.92));
+      padding: 12px;
+      text-align:right;
+    }
+    .stat .k{ font-size: 12px; color: var(--muted); font-weight: 900; }
+    .stat .v{ font-size: 20px; font-weight: 900; margin-top: 6px; }
+
+    [hidden]{ display:none !important; }
+    .capsBox{
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 12px;
+      max-height: 320px;
+      overflow:auto;
+    }
+    .capRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.08);
+      background: var(--soft);
+      margin-bottom: 10px;
+    }
+    .capRow .dept{
+      font-weight: 900;
+      font-size: 13px;
+      text-align:right;
+    }
+    .capRow .right{ width: 140px; min-width: 140px; }
+
+    .tableWrap{
+      margin-top: 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background:#fff;
+      overflow:auto;
+      max-height: 520px;
+    }
+    table{
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+    }
+    th, td{
+      padding: 10px 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(15,23,42,.07);
+      font-size: 13px;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+    th{
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      color: #fff;
+      background: linear-gradient(90deg, #043a62, var(--primary));
+      font-weight: 900;
+    }
+    tbody tr:nth-child(even){ background: rgba(0,98,173,.04); }
+
+    a{
+      color: var(--primary);
+      font-weight: 900;
+      text-decoration: none;
+    }
+    a:hover{ text-decoration: underline; }
+
+    .foot{
+      margin-top: 16px;
+      text-align:center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    /* Dark mode */
+    body.dark{
+      --bg:#0b1220;
+      --soft:#121b2e;
+      --card:#0f172a;
+      --text:#e5e7eb;
+      --muted:#a5b4fc;
+      --border: rgba(255,255,255,.10);
+      background: radial-gradient(1100px 500px at 15% -10%, rgba(0,98,173,.25), transparent 55%),
+                  radial-gradient(900px 420px at 90% 0%, rgba(0,98,173,.18), transparent 60%),
+                  var(--bg);
+    }
+    body.dark .iconBtn,
+    body.dark .modeBtn{
+      color: rgba(255,255,255,.65);
+    }
+    body.dark .iconBtn:hover,
+    body.dark .modeBtn:hover{
+      color: rgba(255,255,255,.92);
+    }
+    body.dark .iconBtn.active,
+    body.dark .modeBtn.active{
+      background: rgba(255,255,255,.10);
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="wrap">
+
+      <div class="brand">
+        <div class="logoBox">
+          <img src="{{ url_for('static', filename='logo.jpg') }}" alt="logo">
+        </div>
+        <div class="brandText">
+          <div class="title">موزّع الطلبة الذكي</div>
+          <div class="sub">
+            {% if filename %}
+              الملف الحالي: {{ filename }}
+            {% else %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!-- ✅ حذفنا كلام اللون الأساسي بالكامل -->
+      <div>        <button class="modeBtn" id="modeBtn" type="button" title="ليلي/نهاري">🌙</button>
+</div>
+    </div>
+  </div>
+
+  <!-- Subbar (Icons only) -->
+  <div class="subbar">
+    <div class="wrap">
+      <div class="nav">
+        <button class="iconBtn active" id="btnHome" type="button" title="الرئيسية">🏠</button>
+        <button class="iconBtn" id="btnStats" type="button" title="الإحصائيات">📊</button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page">
+
+    {% if رسالة %}
+      <div class="msg">
+        <div class="i">ℹ️</div>
+        <div>{{ رسالة }}</div>
+      </div>
+    {% endif %}
+
+    {% if not filename %}
+      <div class="centerWrap">
+        <div class="card uploadCard">
+          <div class="uploadIcon">⬆️</div>
+          <div style="font-weight:900;font-size:16px;margin-bottom:6px;">رفع ملف Excel</div>
+         
+
+          <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="excel_file" accept=".xlsx,.xls" required>
+
+            <div style="margin-top:14px;">
+              <button class="btn" type="submit">رفع الملف</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="foot">© موزّع الطلبة الذكي</div>
+    {% endif %}
+
+    {% if filename %}
+      <div class="afterGrid">
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
+            <div style="font-weight:900;font-size:15px;">إعدادات التوزيع</div>
+            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Settings</span>
+          </div>
+
+          <form method="POST" action="/distribute">
+            <input type="hidden" name="filename" value="{{ filename }}">
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div>
+                <label>طريقة التوزيع</label>
+                <select name="capacity_mode" id="capacity_mode" onchange="toggleCaps()">
+                  <option value="equal" {% if capacity_mode == "equal" %}selected{% endif %}>توزيع متساوي</option>
+                  <option value="manual" {% if capacity_mode == "manual" %}selected{% endif %}>توزيع يدوي</option>
+                </select>
+                <div class="hint">إذا اخترتي يدوي راح تظهر طاقات الأقسام.</div>
+              </div>
+
+              <div>
+                <label>هامش أبناء الأساتذة (درجات)</label>
+                <input type="number" name="teacher_margin" min="0" value="{{ teacher_margin or 5 }}">
+                <div class="hint">شرط القبول: المعدل ≥ (الحد الأدنى - الهامش).</div>
+              </div>
+            </div>
+
+            <div id="caps_box" {% if capacity_mode != "manual" %}hidden{% endif %}>
+              <div class="capsBox">
+                {% for d in detected_departments %}
+                  <div class="capRow">
+                    <div class="dept">{{ d }}</div>
+                    <div class="right">
+                      <input type="number" name="cap__{{ loop.index0 }}" min="0" value="{{ last_caps.get(d, 0) }}">
+                      <input type="hidden" name="cap_name__{{ loop.index0 }}" value="{{ d }}">
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn" type="submit">تشغيل التوزيع</button>
+              {% if can_rerun %}
+                <button class="btn" type="submit" name="action" value="rerun">إعادة التوزيع</button>
+              {% endif %}
+            </div>
+
+            {% if download_file %}
+              <div class="msg" style="margin-top:14px;">
+                <div class="i">⬇️</div>
+                <div>
+                  ملف النتائج جاهز:
+                  <a href="/download/{{ download_file }}">تحميل ملف النتائج</a>
+                </div>
+              </div>
+            {% endif %}
+          </form>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
+            <div style="font-weight:900;font-size:15px;">إحصائيات سريعة</div>
+            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Stats</span>
+          </div>
+
+          <div class="statsGrid">
+            <div class="stat">
+              <div class="k">العدد الكلي</div>
+              <div class="v">{% if احصائيات %}{{ احصائيات.عدد_الكل }}{% else %}—{% endif %}</div>
+            </div>
+            <div class="stat">
+              <div class="k">عام</div>
+              <div class="v">{% if احصائيات %}{{ احصائيات.عام }}{% else %}—{% endif %}</div>
+            </div>
+            <div class="stat">
+              <div class="k">ذوي الشهداء</div>
+              <div class="v">{% if احصائيات %}{{ احصائيات.ذوي_الشهداء }}{% else %}—{% endif %}</div>
+            </div>
+            <div class="stat">
+              <div class="k">موازي</div>
+              <div class="v">{% if احصائيات %}{{ احصائيات.موازي }}{% else %}—{% endif %}</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {% if dept_stats_rows %}
+        <div class="card" style="margin-top:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
+            <div style="font-weight:900;font-size:15px;">إحصائيات الأقسام</div>
+            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Table</span>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <tr>
+                <th>القناة</th>
+                <th>القسم</th>
+                <th>عدد المقبولين</th>
+                <th>المعدل الأدنى</th>
+              </tr>
+              {% for r in dept_stats_rows %}
+                <tr>
+                  <td>{{ r["القناة"] }}</td>
+                  <td>{{ r["القسم"] }}</td>
+                  <td>{{ r["عدد المقبولين"] }}</td>
+                  <td>{{ r["المعدل الأدنى"] }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if results_rows and results_rows|length > 0 %}
+        <div class="card" style="margin-top:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
+            <div style="font-weight:900;font-size:15px;">نتائج الطلبة</div>
+            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Results</span>
+          </div>
+
+          <div class="tableWrap">
+            <table>
+              <tr>
+                {% for col in results_rows[0].keys() %}
+                  <th>{{ col }}</th>
+                {% endfor %}
+              </tr>
+              {% for r in results_rows %}
+                <tr>
+                  {% for v in r.values() %}
+                    <td>{{ v }}</td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="foot">© موزّع الطلبة الذكي</div>
+    {% endif %}
+  </div>
+
+  <script>
+    // dark mode
+    const modeBtn = document.getElementById("modeBtn");
+    const savedMode = localStorage.getItem("mode") || "light";
+    if(savedMode === "dark") {
+      document.body.classList.add("dark");
+      modeBtn?.classList.add("active");
+      modeBtn && (modeBtn.textContent = "☀️");
+    }
+
+    modeBtn?.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("mode", isDark ? "dark" : "light");
+      modeBtn.classList.toggle("active", isDark);
+      modeBtn.textContent = isDark ? "☀️" : "🌙";
+    });
+
+    // tabs (شكل فقط)
+    const btnHome = document.getElementById("btnHome");
+    const btnStats = document.getElementById("btnStats");
+    btnHome?.addEventListener("click", () => {
+      btnHome.classList.add("active");
+      btnStats.classList.remove("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    btnStats?.addEventListener("click", () => {
+      btnStats.classList.add("active");
+      btnHome.classList.remove("active");
+      // ينزل على أول جدول إحصائيات إذا موجود
+      const el = document.querySelector(".tableWrap");
+      if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // manual caps show/hide
+    function toggleCaps(){
+      const v = document.getElementById("capacity_mode")?.value;
+      const el = document.getElementById("caps_box");
+      if(!el) return;
+      if(v === "manual") el.removeAttribute("hidden");
+      else el.setAttribute("hidden", "hidden");
+    }
+  </script>
+
+</body>
+</html>
