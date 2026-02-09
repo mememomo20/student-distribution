@@ -488,9 +488,8 @@ def distribute():
             return "❌ ماكو نتائج.", 400
 
         final_df = pd.concat(results, ignore_index=True)
-
         stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        out_name = f"نتائج_{os.path.splitext(filename)[0]}_{stamp}.xlsx"
+        out_name = f"output for {os.path.splitext(filename)[0]}_{stamp}.xlsx"
         out_path = os.path.join(app.config["UPLOAD_FOLDER"], out_name)
         final_df.to_excel(out_path, index=False)
 
