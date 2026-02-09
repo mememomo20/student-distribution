@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>موزّع الطلبة الذكي</title>
+  
+  <!-- Font Awesome للأيقونات -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- خطوط Google Fonts العربية -->
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -16,89 +22,208 @@
       --border: rgba(15,23,42,.10);
       --shadow: 0 12px 28px rgba(15,23,42,.08);
       --radius: 18px;
+      --gradient: linear-gradient(135deg, #0062AD 0%, #043a62 100%);
+      --gradient-light: linear-gradient(135deg, rgba(0, 98, 173, 0.1) 0%, rgba(4, 58, 98, 0.1) 100%);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 25px 50px rgba(0, 0, 0, 0.12);
     }
 
-    *{ box-sizing:border-box; }
+    *{ 
+      box-sizing:border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      min-height: 100vh;
+      overflow-x: hidden; /* لمنع التمرير الأفقي للصفحة ككل */
+    }
+    
     body{
-      margin:0;
-      font-family: Arial, sans-serif;
+      font-family: 'Almarai', 'Tajawal', Arial, sans-serif;
       direction: rtl;
       background: radial-gradient(1100px 500px at 15% -10%, rgba(0,98,173,.12), transparent 55%),
                   radial-gradient(900px 420px at 90% 0%, rgba(0,98,173,.08), transparent 60%),
                   var(--bg);
       color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* ===== Header (اصغر) ===== */
+    /* تحسينات التمرير */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--soft);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gradient);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #0284c7 0%, #0062AD 100%);
+    }
+
+    /* ===== Header مع تحسينات ===== */
     .header{
-      background: linear-gradient(90deg, #043a62, var(--primary));
+      background: linear-gradient(90deg, #043a62, #0062AD, #0284c7);
+      background-size: 200% 200%;
+      animation: gradientShift 8s ease infinite;
       color:#fff;
-      padding: 10px 0;                 /* كان 16 */
+      padding: 12px 0;
       box-shadow: 0 10px 22px rgba(0,0,0,.12);
       position: sticky;
       top: 0;
       z-index: 50;
+      flex-shrink: 0;
     }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     .header .wrap{
       width: 1120px;
       max-width: 96%;
       margin: 0 auto;
       display:flex;
-      align-items:center;
+      align-items:right;
       justify-content:space-between;
-      gap: 12px;
+      gap: 20px;
     }
+
+    /* اللوجو على اليمين */
     .brand{
       display:flex;
       align-items:center;
-      gap: 10px;
+      gap: 12px;
       min-width: 0;
+      margin-right: auto;
     }
+
     .logoBox{
-      width: 40px;                     /* كان 46 */
-      height: 40px;
+      width: 45px;
+      height: 45px;
       border-radius: 12px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,.1);
       display:grid;
       place-items:center;
       overflow:hidden;
       flex: 0 0 auto;
+      order: 1;
     }
+
     .logoBox img{
       width: 100%;
       height: 100%;
       object-fit: cover;
       background:#fff;
     }
+
     .brandText{
       display:flex;
       flex-direction:column;
-      gap: 2px;
+      gap: 3px;
       min-width:0;
+      text-align: right;
+      order: 2;
     }
+
     .brandText .title{
       font-weight: 900;
-      font-size: 18px;                 /* كان 18 */
+      font-size: 20px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      font-family: 'Tajawal', sans-serif;
     }
-   
 
-    /* ===== Subbar (أيقونات فقط بدون حدود) ===== */
+    .brandText .sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 600;
+    }
+
+    /* زر الوضع الليلي على اليسار */
+    .modeContainer {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .modeBtn{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(5px);
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      font-size: 20px;
+      color: rgba(255,255,255,.8);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modeBtn::after{
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .modeBtn:hover{ 
+      transform: translateY(-3px); 
+      color: rgba(255,255,255,1); 
+    }
+
+    .modeBtn:hover::after{
+      width: 300%;
+      height: 300%;
+    }
+
+    .modeBtn.active{ 
+      color: white; 
+      background: rgba(255,255,255,.2);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    /* ===== Subbar مع تحسينات ===== */
     .subbar{
       background: transparent;
       border-bottom: none;
+      flex-shrink: 0;
     }
+
     .subbar .wrap{
       width: 1120px;
       max-width: 96%;
       margin: 0 auto;
-      padding: 10px 0 0;               /* خليته خفيف */
+      padding: 10px 0 0;
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content:flex-start;
       gap: 10px;
     }
 
@@ -108,79 +233,165 @@
       align-items:center;
     }
 
-    /* زر أيقونة بسيط */
+    /* زر أيقونة محسن */
     .iconBtn{
       width: 44px;
       height: 44px;
       border-radius: 14px;
-      border: none;                    /* بدون حدود */
-      background: transparent;         /* بدون كبسولة */
+      border: none;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(5px);
       cursor:pointer;
       user-select:none;
       display:grid;
       place-items:center;
       font-size: 20px;
-      color: rgba(15,23,42,.60);       /* لون ساده */
-      transition: .12s;
-    }
-    .iconBtn:hover{
-      transform: translateY(-1px);
-      color: rgba(15,23,42,.85);
-    }
-    .iconBtn.active{
-      color: var(--primary);           /* يبين active بلون المشروع */
-      background: rgba(0,98,173,.10);  /* خلفية خفيفة جدا (مو حدود) */
+      color: rgba(15,23,42,.60);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* زر الوضع الليلي نفس الفكرة */
-    .modeBtn{
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      border: none;
-      background: transparent;
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      font-size: 20px;
-      color: rgba(15,23,42,.60);
-      transition:.12s;
+    .iconBtn::after{
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
     }
-    .modeBtn:hover{ transform: translateY(-1px); color: rgba(15,23,42,.85); }
-    .modeBtn.active{ color: var(--primary); background: rgba(0,98,173,.10); }
+
+    .iconBtn:hover{
+      transform: translateY(-3px);
+      color: rgba(15,23,42,.85);
+    }
+
+    .iconBtn:hover::after{
+      width: 300%;
+      height: 300%;
+    }
+
+    .iconBtn.active{
+      color: white;
+      background: var(--gradient);
+      box-shadow: 0 8px 20px rgba(0,98,173,0.3);
+    }
 
     /* ===== Page container ===== */
     .page{
       width: 1120px;
       max-width: 96%;
-      margin: 18px auto 26px;
+      margin: 18px auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
+    /* ===== صفحة الرفع الرئيسية ===== */
+    .centerWrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      padding: 40px 0;
+    }
+
+    .uploadCard{
+      width: min(850px, 90%);
+      text-align: center;
+      padding: 60px 40px;
+      border: 2px dashed rgba(0, 98, 173, 0.15);
+      background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(245,248,252,0.98));
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0,98,173,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .uploadCard:hover{
+      transform: translateY(-5px);
+      box-shadow: 0 30px 60px rgba(0,98,173,0.12);
+      border-color: rgba(0, 98, 173, 0.3);
+    }
+
+    .uploadIcon{
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 30px;
+      font-size: 45px;
+      color: var(--primary);
+      border-radius: 50%;
+      background: var(--gradient-light);
+      box-shadow: 0 15px 30px rgba(0,98,173,0.15);
+      display: grid;
+      place-items: center;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* بطاقات محسنة */
     .card{
-      background: var(--card);
-      border: 1px solid var(--border);
+      background: linear-gradient(145deg, var(--card), var(--soft));
+      border: none;
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-lg);
       padding: 16px;
-      overflow:hidden;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
     }
 
-    /* message */
+    .card:hover{
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card::before{
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--gradient);
+    }
+
+    /* رسائل محسنة */
     .msg{
       display:flex;
       gap:10px;
       align-items:flex-start;
       padding: 12px;
       border-radius: 14px;
-      border: 1px solid rgba(0,98,173,.18);
-      background: rgba(0,98,173,.08);
+      border: none;
+      background: linear-gradient(135deg, rgba(0, 98, 173, 0.1), rgba(4, 58, 98, 0.1));
+      backdrop-filter: blur(10px);
       color: #043a62;
       font-weight: 800;
       line-height:1.6;
       margin-bottom: 14px;
+      border-left: 4px solid var(--primary);
     }
+
     .msg .i{
-      width: 30px; height: 30px;
+      width: 30px; 
+      height: 30px;
       border-radius: 12px;
       background: rgba(0,98,173,.10);
       border: 1px solid rgba(0,98,173,.18);
@@ -189,27 +400,7 @@
       flex:0 0 auto;
     }
 
-    /* FIRST VIEW: upload card center */
-    .centerWrap{
-      display:flex;
-      justify-content:center;
-      margin-top: 16px;
-    }
-    .uploadCard{
-      width: min(720px, 100%);
-      text-align: center;
-      padding: 22px 18px;
-    }
-    .uploadIcon{
-      width: 56px;
-      height: 56px;
-      margin: 0 auto 10px;
-      display:grid;
-      place-items:center;
-      font-size: 22px;
-      color:#043a62;
-    }
-
+    /* تنسيقات الحقول */
     label{
       display:block;
       text-align:right;
@@ -218,20 +409,25 @@
       margin-bottom: 8px;
       color: rgba(15,23,42,.85);
     }
+
     input[type="file"], select, input[type="number"]{
       width:100%;
       border-radius: 14px;
       padding: 12px 14px;
-      border: 1px solid var(--border);
+      border: 2px solid transparent;
       outline: none;
-      background:#fff;
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(135deg, rgba(0, 98, 173, 0.2), rgba(4, 58, 98, 0.2)) border-box;
       font-weight: 800;
-      transition:.15s;
+      transition: all 0.3s ease;
+      font-family: 'Tajawal', sans-serif;
     }
+
     input[type="file"]:focus, select:focus, input[type="number"]:focus{
-      border-color: rgba(0,98,173,.45);
-      box-shadow: 0 0 0 4px rgba(0,98,173,.12);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,98,173,0.1);
     }
+
     .hint{
       margin-top: 8px;
       font-size: 12px;
@@ -241,20 +437,47 @@
       text-align: right;
     }
 
+    /* أزرار محسنة */
     .btn{
       border:0;
-      border-radius: 14px;
-      padding: 12px 16px;
+      border-radius: 16px;
+      padding: 16px 32px;
       cursor:pointer;
-      background: linear-gradient(90deg, #043a62, var(--primary));
+      background: var(--gradient);
+      background-size: 200% 200%;
       color:#fff;
       font-weight: 900;
-      box-shadow: 0 12px 18px rgba(0,98,173,.16);
-      transition:.12s;
+      box-shadow: 0 15px 25px rgba(0,98,173,.2);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Tajawal', sans-serif;
+      letter-spacing: 0.5px;
+      font-size: 16px;
     }
-    .btn:hover{ transform: translateY(-1px); }
 
-    /* after upload layout */
+    .btn:hover{ 
+      transform: translateY(-3px); 
+      box-shadow: 0 20px 35px rgba(0,98,173,0.3);
+      background-position: 100% 50%;
+    }
+
+    .btn::after{
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.7s;
+    }
+
+    .btn:hover::after{
+      left: 100%;
+    }
+
+    /* بعد رفع الملف */
     .afterGrid{
       display:grid;
       grid-template-columns: 1.1fr .9fr;
@@ -262,26 +485,52 @@
       align-items:start;
       margin-top: 14px;
     }
+
     @media (max-width: 980px){
       .afterGrid{ grid-template-columns: 1fr; }
     }
 
+    /* إحصائيات محسنة */
     .statsGrid{
       display:grid;
       grid-template-columns: repeat(2, minmax(140px, 1fr));
       gap: 12px;
     }
+
     .stat{
       border-radius: 16px;
-      border: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(0,98,173,.08), rgba(255,255,255,.92));
+      border: none;
+      background: linear-gradient(145deg, var(--soft), var(--card));
       padding: 12px;
       text-align:right;
+      box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.05),
+                  inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease;
     }
-    .stat .k{ font-size: 12px; color: var(--muted); font-weight: 900; }
-    .stat .v{ font-size: 20px; font-weight: 900; margin-top: 6px; }
+
+    .stat:hover{
+      transform: translateY(-3px);
+    }
+
+    .stat .k{ 
+      font-size: 12px; 
+      color: var(--muted); 
+      font-weight: 900; 
+    }
+
+    .stat .v{ 
+      font-size: 28px; 
+      font-weight: 800; 
+      margin-top: 6px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
     [hidden]{ display:none !important; }
+
+    /* مربع السعات */
     .capsBox{
       margin-top: 12px;
       border-radius: 16px;
@@ -291,6 +540,7 @@
       max-height: 320px;
       overflow:auto;
     }
+
     .capRow{
       display:flex;
       align-items:center;
@@ -301,61 +551,335 @@
       border: 1px solid rgba(15,23,42,.08);
       background: var(--soft);
       margin-bottom: 10px;
+      transition: transform 0.2s ease;
     }
+
+    .capRow:hover{
+      transform: translateX(-5px);
+    }
+
     .capRow .dept{
       font-weight: 900;
       font-size: 13px;
       text-align:right;
     }
-    .capRow .right{ width: 140px; min-width: 140px; }
 
+    .capRow .right{ 
+      width: 140px; 
+      min-width: 140px; 
+    }
+
+    /* جداول محسنة - تم التعديل هنا */
     .tableWrap{
       margin-top: 10px;
       border-radius: 16px;
       border: 1px solid var(--border);
       background:#fff;
-      overflow:auto;
+      overflow: auto; /* تم التعديل هنا - من hidden إلى auto */
       max-height: 520px;
+      border-radius: 12px;
+      position: relative;
     }
+
+    /* أزرار التنقل للجدول */
+    .table-nav-buttons {
+      position: absolute;
+      bottom: 10px;
+      right: 50%;
+      transform: translateX(50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .table-nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .table-nav-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0,98,173,0.3);
+    }
+
+    .table-nav-btn:active {
+      transform: scale(0.95);
+    }
+
     table{
       width: 100%;
       border-collapse: collapse;
-      min-width: 860px;
+      min-width: 100%; /* تم التعديل هنا - من 860px إلى 100% */
     }
-    th, td{
-      padding: 10px 8px;
+
+    th{
+      padding: 15px 10px;
+      text-align: center;
+      border-bottom: 1px solid rgba(15,23,42,.07);
+      font-size: 13px;
+      white-space: nowrap;
+      font-weight: 900;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      color: #fff;
+      background: var(--gradient);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: 'Tajawal', sans-serif;
+      min-width: 120px; /* عرض أدنى لكل عمود */
+    }
+
+    td{
+      padding: 12px 10px;
       text-align: center;
       border-bottom: 1px solid rgba(15,23,42,.07);
       font-size: 13px;
       white-space: nowrap;
       font-weight: 800;
+      transition: background-color 0.2s ease;
+      min-width: 120px; /* عرض أدنى لكل خلية */
     }
-    th{
-      position: sticky;
-      top: 0;
-      z-index: 5;
-      color: #fff;
-      background: linear-gradient(90deg, #043a62, var(--primary));
-      font-weight: 900;
-    }
-    tbody tr:nth-child(even){ background: rgba(0,98,173,.04); }
 
+    tbody tr:nth-child(even){ 
+      background: rgba(0,98,173,.04); 
+    }
+
+    tbody tr:hover{
+      background: var(--gradient-light) !important;
+    }
+
+    /* الروابط */
     a{
       color: var(--primary);
       font-weight: 900;
       text-decoration: none;
+      transition: all 0.3s ease;
     }
-    a:hover{ text-decoration: underline; }
 
+    a:hover{ 
+      text-decoration: underline;
+      color: #043a62;
+    }
+
+    /* التذييل */
     .foot{
-      margin-top: 16px;
+      margin-top: auto;
+      padding: 25px 0;
       text-align:center;
       color: var(--muted);
       font-size: 12px;
       font-weight: 800;
+      background: linear-gradient(90deg, rgba(0, 98, 173, 0.03), rgba(4, 58, 98, 0.03));
+      border-top: 1px solid var(--border);
+      width: 100%;
+      flex-shrink: 0;
     }
 
-    /* Dark mode */
+    /* badges محسنة */
+    .pill{
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 12px;
+      color: white;
+      background: var(--gradient);
+      box-shadow: 0 4px 12px rgba(0, 98, 173, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill i{
+      font-size: 10px;
+    }
+
+    /* ===== تصميم حقل اختيار الملف ===== */
+    .file-input-container {
+      position: relative;
+      margin: 30px 0;
+    }
+
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 25px;
+      border-radius: 18px;
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(135deg, rgba(0, 98, 173, 0.1), rgba(4, 58, 98, 0.1)) border-box;
+      border: 2px dashed rgba(0, 98, 173, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--primary);
+      background: linear-gradient(var(--bg), var(--bg)) padding-box,
+                  linear-gradient(135deg, rgba(0, 98, 173, 0.15), rgba(4, 58, 98, 0.15)) border-box;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,98,173,0.1);
+    }
+
+    .file-input-text {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .file-input-text i {
+      color: var(--primary);
+      font-size: 18px;
+    }
+
+    .file-input-button {
+      background: var(--gradient);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .file-input-label:hover .file-input-button {
+      transform: scale(1.05);
+    }
+
+    /* ===== مربع المعلومات ===== */
+    .info-box {
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(0,98,173,0.05);
+      border-radius: 16px;
+      border-right: 4px solid var(--primary);
+      text-align: right;
+    }
+
+    .info-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-list {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .info-list li {
+      margin-bottom: 8px;
+      padding-right: 20px;
+      position: relative;
+    }
+
+    .info-list li:before {
+      content: "•";
+      color: var(--primary);
+      position: absolute;
+      right: 0;
+      font-size: 18px;
+    }
+
+    /* تصميم العنوان الرئيسي */
+    .main-title {
+      font-family: 'Tajawal', sans-serif;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+.brand {
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  margin-right: auto; /* يدفعه إلى اليمين */
+}
+
+.modeContainer {
+  margin-left: auto; /* يدفعه إلى اليسار */
+}
+    .main-subtitle {
+      color: var(--text);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .main-description {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* مسافة اضافية */
+    .spacer {
+      height: 40px;
+      width: 100%;
+    }
+
+    /* أزرار التنقل العامة */
+    .global-nav-buttons {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .global-nav-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 6px 20px rgba(0,98,173,0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .global-nav-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0,98,173,0.4);
+    }
+    
+    .global-nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Dark mode محسن */
     body.dark{
       --bg:#0b1220;
       --soft:#121b2e;
@@ -363,118 +887,401 @@
       --text:#e5e7eb;
       --muted:#a5b4fc;
       --border: rgba(255,255,255,.10);
+      --gradient-light: linear-gradient(135deg, rgba(0, 98, 173, 0.2) 0%, rgba(4, 58, 98, 0.2) 100%);
       background: radial-gradient(1100px 500px at 15% -10%, rgba(0,98,173,.25), transparent 55%),
                   radial-gradient(900px 420px at 90% 0%, rgba(0,98,173,.18), transparent 60%),
                   var(--bg);
     }
+
+    body.dark .card{
+      background: linear-gradient(145deg, #121b2e, #0f172a);
+    }
+
+    body.dark .stat{
+      background: linear-gradient(145deg, #121b2e, #0f172a);
+    }
+
     body.dark .iconBtn,
     body.dark .modeBtn{
       color: rgba(255,255,255,.65);
     }
+
     body.dark .iconBtn:hover,
     body.dark .modeBtn:hover{
       color: rgba(255,255,255,.92);
     }
+
     body.dark .iconBtn.active,
     body.dark .modeBtn.active{
-      background: rgba(255,255,255,.10);
+      background: var(--gradient);
       color: #ffffff;
+    }
+
+    body.dark .capsBox{
+      background: #1e293b;
+      border-color: rgba(255,255,255,.1);
+    }
+
+    body.dark .capRow{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.08);
+    }
+
+    body.dark .tableWrap{
+      background: #1e293b;
+      border-color: rgba(255,255,255,.1);
+    }
+
+    body.dark input[type="file"], 
+    body.dark select, 
+    body.dark input[type="number"]{
+      background: linear-gradient(#1e293b, #1e293b) padding-box,
+                  linear-gradient(135deg, rgba(0, 98, 173, 0.3), rgba(4, 58, 98, 0.3)) border-box;
+      color: #e5e7eb;
+    }
+
+    body.dark .msg{
+      color: #a5b4fc;
+    }
+
+    body.dark .uploadCard {
+      background: linear-gradient(145deg, rgba(15,23,42,0.95), rgba(18,27,46,0.98));
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    body.dark .file-input-label {
+      background: linear-gradient(#1e293b, #1e293b) padding-box,
+                  linear-gradient(135deg, rgba(0, 98, 173, 0.2), rgba(4, 58, 98, 0.2)) border-box;
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    body.dark .info-box {
+      background: rgba(0,98,173,0.08);
+    }
+
+    body.dark .foot {
+      background: linear-gradient(90deg, rgba(0, 98, 173, 0.05), rgba(4, 58, 98, 0.05));
+    }
+
+    body.dark .table-nav-buttons {
+      background: rgba(30, 41, 59, 0.9);
+    }
+
+    body.dark .global-nav-btn {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    /* تحسينات responsive */
+    @media (max-width: 768px){
+      .header .wrap{
+        padding: 10px 0;
+        gap: 15px;
+      }
+      
+      .brand{
+        width: 100%;
+        justify-content: flex-start;
+        margin-right: 0;
+      }
+      
+      .brandText .title {
+        font-size: 16px;
+      }
+      
+      .modeContainer {
+        margin-left: 0;
+      }
+      
+      .subbar .wrap{
+        justify-content: center;
+      }
+      
+      .afterGrid{
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      
+      .statsGrid{
+        grid-template-columns: 1fr;
+      }
+      
+      .page{
+        margin: 10px auto 20px;
+      }
+      
+      .centerWrap {
+        min-height: 60vh;
+        padding: 20px 0;
+      }
+      
+      .uploadCard {
+        padding: 40px 20px;
+      }
+      
+      .uploadIcon {
+        width: 80px;
+        height: 80px;
+        font-size: 36px;
+      }
+      
+      .file-input-label {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .btn {
+        padding: 14px 24px;
+        font-size: 15px;
+      }
+      
+      .foot {
+        padding: 20px 0;
+      }
+      
+      .global-nav-buttons {
+        left: 15px;
+        bottom: 15px;
+      }
+      
+      .global-nav-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+      
+      .table-nav-buttons {
+        bottom: 5px;
+        padding: 6px 12px;
+      }
+      
+      .table-nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+      }
+      
+      th, td {
+        padding: 10px 8px;
+        font-size: 12px;
+        min-width: 100px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header .wrap {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .brand {
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .modeContainer {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      
+      .table-nav-buttons {
+        flex-direction: column;
+        right: 10px;
+        bottom: 10px;
+        transform: none;
+        left: auto;
+      }
+      
+      th, td {
+        padding: 8px 6px;
+        font-size: 11px;
+        min-width: 80px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Header -->
-  <div class="header">
-    <div class="wrap">
+<div class="header">
+    <div class="wrap" style="display: flex; align-items: center; position: relative;">
+        <!-- زر الوضع الليلي على اليسار -->
+        <div class="modeContainer" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);">
+            <button class="modeBtn" id="modeBtn" type="button" title="ليلي/نهاري">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
 
-      <div class="brand">
-        <div class="logoBox">
-          <img src="{{ url_for('static', filename='logo.jpg') }}" alt="logo">
+        <!-- اللوجو والاسم في المنتصف -->
+        <div class="brand" style="margin: 0 auto; text-align: center;">
+            <div class="logoBox">
+                <img src="{{ url_for('static', filename='logo.jpg') }}" alt="logo">
+            </div>
+            <div class="brandText">
+                <div class="title">موزع الطلبة الذكي</div>
+                <div class="sub">
+                    {% if filename %}
+                    <small>الملف الحالي: {{ filename }}</small>
+                    {% else %}
+                    <small>نظام توزيع الطلبة الذكي</small>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="brandText">
-          <div class="title">موزّع الطلبة الذكي</div>
-          <div class="sub">
-            {% if filename %}
-              الملف الحالي: {{ filename }}
-            {% else %}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <!-- ✅ حذفنا كلام اللون الأساسي بالكامل -->
-      <div>        <button class="modeBtn" id="modeBtn" type="button" title="ليلي/نهاري">🌙</button>
-</div>
     </div>
-  </div>
+</div>
 
   <!-- Subbar (Icons only) -->
   <div class="subbar">
     <div class="wrap">
       <div class="nav">
-        <button class="iconBtn active" id="btnHome" type="button" title="الرئيسية">🏠</button>
-        <button class="iconBtn" id="btnStats" type="button" title="الإحصائيات">📊</button>
+        <button class="iconBtn active" id="btnHome" type="button" title="الرئيسية">
+          <i class="fas fa-home"></i>
+        </button>
+        <button class="iconBtn" id="btnStats" type="button" title="الإحصائيات">
+          <i class="fas fa-chart-bar"></i>
+        </button>
       </div>
-
     </div>
   </div>
 
   <div class="page">
-
     {% if رسالة %}
       <div class="msg">
-        <div class="i">ℹ️</div>
+        <div class="i"><i class="fas fa-info-circle"></i></div>
         <div>{{ رسالة }}</div>
       </div>
     {% endif %}
 
     {% if not filename %}
       <div class="centerWrap">
-        <div class="card uploadCard">
-          <div class="uploadIcon">⬆️</div>
-          <div style="font-weight:900;font-size:16px;margin-bottom:6px;">رفع ملف Excel</div>
-         
+        <div class="uploadCard">
+          <div class="uploadIcon">
+            <i class="fas fa-cloud-upload-alt"></i>
+          </div>
+          
+          <div style="margin-bottom: 30px;">
+            <div class="main-title" style="font-size: 28px; margin-bottom: 10px;">
+              موزّع الطلبة الذكي
+            </div>
+            <div class="main-subtitle" style="font-size: 18px;">
+              رفع ملف Excel للبدء
+            </div>
+            <div class="main-description">
+              يدعم الملفات بصيغة .xls و .xlsx
+            </div>
+          </div>
 
           <form method="POST" enctype="multipart/form-data">
-            <input type="file" name="excel_file" accept=".xlsx,.xls" required>
+            <div class="file-input-container">
+              <label class="file-input-label" for="excel_file">
+                <div class="file-input-text">
+                  <i class="fas fa-file-excel"></i>
+                  <span id="fileName">لم يتم اختيار ملف</span>
+                </div>
+                <div class="file-input-button">
+                  <i class="fas fa-folder-open" style="margin-left: 8px;"></i>
+                  اختر ملف
+                </div>
+              </label>
+              <input type="file" name="excel_file" id="excel_file" accept=".xlsx,.xls" required 
+                     style="position: absolute; opacity: 0; width: 100%; height: 100%; top: 0; right: 0; cursor: pointer;">
+            </div>
 
-            <div style="margin-top:14px;">
-              <button class="btn" type="submit">رفع الملف</button>
+            <div style="margin-top: 40px;">
+              <button class="btn" type="submit" style="padding: 18px 40px; font-size: 17px;">
+                <i class="fas fa-upload" style="margin-left: 12px;"></i>
+                رفع الملف وتحميل البيانات
+              </button>
+            </div>
+            
+            <div class="info-box">
+              <div class="info-title">
+                <i class="fas fa-info-circle"></i>
+                معلومات مهمة
+              </div>
+              <div class="info-list">
+                <li>يجب أن يحتوي الملف على أسماء الطلبة ومعدلاتهم وتخصصاتهم</li>
+                <li>يمكنك تحميل ملف النتائج بعد الانتهاء من التوزيع</li>
+                <li>النظام يدعم التوزيع المتساوي واليدوي</li>
+                <li>التوزيع يعتمد على الأولوية والمعدل التراكمي</li>
+                <li>يتم مراعاة شروط القبول الخاصة بكل قسم</li>
+              </div>
             </div>
           </form>
         </div>
       </div>
 
-      <div class="foot">© موزّع الطلبة الذكي</div>
+      <div class="spacer"></div>
+
+      <div class="foot">
+        <div style="max-width: 1120px; margin: 0 auto; padding: 0 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <i class="fas fa-copyright" style="color: var(--muted);"></i>
+              <span style="font-weight: 700; color: var(--text);">موزّع الطلبة الذكي</span>
+              <span style="color: var(--muted); font-size: 11px;">- نظام توزيع الطلبة الآلي</span>
+            </div>
+            <div style="display: flex; gap: 25px;">
+              <span style="display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px;">
+                <i class="fas fa-shield-alt" style="color: #4CAF50;"></i>
+                آمن
+              </span>
+              <span style="display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px;">
+                <i class="fas fa-bolt" style="color: #FF9800;"></i>
+                سريع
+              </span>
+              <span style="display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px;">
+                <i class="fas fa-check-circle" style="color: #2196F3;"></i>
+                دقيق
+              </span>
+              <span style="display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px;">
+                <i class="fas fa-chart-line" style="color: #9C27B0;"></i>
+                ذكي
+              </span>
+            </div>
+          </div>
+          <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px;">
+            تم التطوير باستخدام تقنيات حديثة لتوفير أفضل تجربة للمستخدم
+          </div>
+        </div>
+      </div>
     {% endif %}
 
     {% if filename %}
+      <!-- صفحة بعد رفع الملف -->
       <div class="afterGrid">
-
         <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
-            <div style="font-weight:900;font-size:15px;">إعدادات التوزيع</div>
-            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Settings</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;">
+            <div style="font-weight:900;font-size:16px;color:var(--primary)">
+              <i class="fas fa-cog" style="margin-left:8px;"></i>
+              إعدادات التوزيع
+            </div>
+            <span class="pill">
+              <i class="fas fa-sliders-h"></i>
+              الإعدادات
+            </span>
           </div>
 
           <form method="POST" action="/distribute">
             <input type="hidden" name="filename" value="{{ filename }}">
 
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px;">
               <div>
-                <label>طريقة التوزيع</label>
+                <label><i class="fas fa-random" style="margin-left:5px;"></i> طريقة التوزيع</label>
                 <select name="capacity_mode" id="capacity_mode" onchange="toggleCaps()">
                   <option value="equal" {% if capacity_mode == "equal" %}selected{% endif %}>توزيع متساوي</option>
                   <option value="manual" {% if capacity_mode == "manual" %}selected{% endif %}>توزيع يدوي</option>
                 </select>
-                <div class="hint">إذا اخترتي يدوي راح تظهر طاقات الأقسام.</div>
+                <div class="hint">إذا اخترت يدوي سيظهر لك حقل لإدخال سعات الأقسام</div>
               </div>
 
               <div>
-                <label>هامش أبناء الأساتذة (درجات)</label>
+                <label><i class="fas fa-user-graduate" style="margin-left:5px;"></i> هامش أبناء الأساتذة (درجات)</label>
                 <input type="number" name="teacher_margin" min="0" value="{{ teacher_margin or 5 }}">
-                <div class="hint">شرط القبول: المعدل ≥ (الحد الأدنى - الهامش).</div>
+                <div class="hint">شرط القبول: المعدل ≥ (الحد الأدنى - الهامش)</div>
               </div>
             </div>
 
@@ -482,9 +1289,13 @@
               <div class="capsBox">
                 {% for d in detected_departments %}
                   <div class="capRow">
-                    <div class="dept">{{ d }}</div>
+                    <div class="dept">
+                      <i class="fas fa-building" style="margin-left:5px;"></i>
+                      {{ d }}
+                    </div>
                     <div class="right">
-                      <input type="number" name="cap__{{ loop.index0 }}" min="0" value="{{ last_caps.get(d, 0) }}">
+                      <input type="number" name="cap__{{ loop.index0 }}" min="0" value="{{ last_caps.get(d, 0) }}" 
+                             placeholder="السعة" style="text-align:center;">
                       <input type="hidden" name="cap_name__{{ loop.index0 }}" value="{{ d }}">
                     </div>
                   </div>
@@ -492,19 +1303,28 @@
               </div>
             </div>
 
-            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-              <button class="btn" type="submit">تشغيل التوزيع</button>
+            <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn" type="submit" style="flex:1;">
+                <i class="fas fa-play-circle" style="margin-left:8px;"></i>
+                تشغيل التوزيع
+              </button>
               {% if can_rerun %}
-                <button class="btn" type="submit" name="action" value="rerun">إعادة التوزيع</button>
+                <button class="btn" type="submit" name="action" value="rerun" style="background:linear-gradient(135deg, #4CAF50, #2E7D32);">
+                  <i class="fas fa-redo" style="margin-left:8px;"></i>
+                  إعادة التوزيع
+                </button>
               {% endif %}
             </div>
 
             {% if download_file %}
-              <div class="msg" style="margin-top:14px;">
-                <div class="i">⬇️</div>
+              <div class="msg" style="margin-top:20px;">
+                <div class="i"><i class="fas fa-download"></i></div>
                 <div>
-                  ملف النتائج جاهز:
-                  <a href="/download/{{ download_file }}">تحميل ملف النتائج</a>
+                  <strong>ملف النتائج جاهز:</strong>
+                  <a href="/download/{{ download_file }}" style="display:inline-block;margin-top:5px;">
+                    <i class="fas fa-file-excel" style="margin-left:5px;"></i>
+                    تحميل ملف النتائج
+                  </a>
                 </div>
               </div>
             {% endif %}
@@ -512,18 +1332,24 @@
         </div>
 
         <div class="card">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
-            <div style="font-weight:900;font-size:15px;">إحصائيات سريعة</div>
-            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Stats</span>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;">
+            <div style="font-weight:900;font-size:16px;color:var(--primary)">
+              <i class="fas fa-chart-pie" style="margin-left:8px;"></i>
+              إحصائيات سريعة
+            </div>
+            <span class="pill">
+              <i class="fas fa-tachometer-alt"></i>
+              الإحصائيات
+            </span>
           </div>
 
           <div class="statsGrid">
             <div class="stat">
-              <div class="k">العدد الكلي</div>
+              <div class="k">العدد الكلي للطلبة</div>
               <div class="v">{% if احصائيات %}{{ احصائيات.عدد_الكل }}{% else %}—{% endif %}</div>
             </div>
             <div class="stat">
-              <div class="k">عام</div>
+              <div class="k">طلبة القناة العامة</div>
               <div class="v">{% if احصائيات %}{{ احصائيات.عام }}{% else %}—{% endif %}</div>
             </div>
             <div class="stat">
@@ -531,80 +1357,210 @@
               <div class="v">{% if احصائيات %}{{ احصائيات.ذوي_الشهداء }}{% else %}—{% endif %}</div>
             </div>
             <div class="stat">
-              <div class="k">موازي</div>
+              <div class="k">طلاب نظام الموازي</div>
               <div class="v">{% if احصائيات %}{{ احصائيات.موازي }}{% else %}—{% endif %}</div>
             </div>
           </div>
         </div>
-
       </div>
 
       {% if dept_stats_rows %}
-        <div class="card" style="margin-top:14px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
-            <div style="font-weight:900;font-size:15px;">إحصائيات الأقسام</div>
-            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Table</span>
+        <div class="card" style="margin-top:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;">
+            <div style="font-weight:900;font-size:16px;color:var(--primary)">
+              <i class="fas fa-university" style="margin-left:8px;"></i>
+              إحصائيات الأقسام
+            </div>
+            <span class="pill">
+              <i class="fas fa-table"></i>
+              الجدول التفصيلي
+            </span>
           </div>
 
-          <div class="tableWrap">
-            <table>
-              <tr>
-                <th>القناة</th>
-                <th>القسم</th>
-                <th>عدد المقبولين</th>
-                <th>المعدل الأدنى</th>
-              </tr>
-              {% for r in dept_stats_rows %}
+          <div class="tableWrap" id="deptTableWrap">
+            <table id="deptTable">
+              <thead>
                 <tr>
-                  <td>{{ r["القناة"] }}</td>
-                  <td>{{ r["القسم"] }}</td>
-                  <td>{{ r["عدد المقبولين"] }}</td>
-                  <td>{{ r["المعدل الأدنى"] }}</td>
+                  <th>القناة</th>
+                  <th>القسم</th>
+                  <th>عدد المقبولين</th>
+                  <th>المعدل الأدنى</th>
                 </tr>
-              {% endfor %}
+              </thead>
+              <tbody>
+                {% for r in dept_stats_rows %}
+                  <tr>
+                    <td>{{ r["القناة"] }}</td>
+                    <td>{{ r["القسم"] }}</td>
+                    <td>{{ r["عدد المقبولين"] }}</td>
+                    <td>{{ r["المعدل الأدنى"] }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
             </table>
+            <!-- أزرار التنقل للجدول -->
+            <div class="table-nav-buttons" id="deptTableNav">
+              <button class="table-nav-btn" onclick="scrollTableLeft('deptTableWrap')">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+              <button class="table-nav-btn" onclick="scrollTableRight('deptTableWrap')">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+            </div>
           </div>
         </div>
       {% endif %}
 
       {% if results_rows and results_rows|length > 0 %}
-        <div class="card" style="margin-top:14px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;">
-            <div style="font-weight:900;font-size:15px;">نتائج الطلبة</div>
-            <span class="pill" style="padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;color:#fff;background:linear-gradient(90deg,#043a62,var(--primary));">Results</span>
+        <div class="card" style="margin-top:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px;">
+            <div style="font-weight:900;font-size:16px;color:var(--primary)">
+              <i class="fas fa-users" style="margin-left:8px;"></i>
+              نتائج الطلبة
+            </div>
+            <span class="pill">
+              <i class="fas fa-list-alt"></i>
+              القائمة الكاملة
+            </span>
           </div>
 
-          <div class="tableWrap">
-            <table>
-              <tr>
-                {% for col in results_rows[0].keys() %}
-                  <th>{{ col }}</th>
-                {% endfor %}
-              </tr>
-              {% for r in results_rows %}
+          <div class="tableWrap" id="resultsTableWrap">
+            <table id="resultsTable">
+              <thead>
                 <tr>
-                  {% for v in r.values() %}
-                    <td>{{ v }}</td>
+                  {% for col in results_rows[0].keys() %}
+                    <th>{{ col }}</th>
                   {% endfor %}
                 </tr>
-              {% endfor %}
+              </thead>
+              <tbody>
+                {% for r in results_rows %}
+                  <tr>
+                    {% for v in r.values() %}
+                      <td>{{ v }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
             </table>
+            <!-- أزرار التنقل للجدول -->
+            <div class="table-nav-buttons" id="resultsTableNav">
+              <button class="table-nav-btn" onclick="scrollTableLeft('resultsTableWrap')">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+              <button class="table-nav-btn" onclick="scrollTableRight('resultsTableWrap')">
+                <i class="fas fa-arrow-left"></i>
+              </button>
+            </div>
           </div>
         </div>
       {% endif %}
 
-      <div class="foot">© موزّع الطلبة الذكي</div>
+      <div class="foot">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+          <div>
+            <i class="fas fa-copyright" style="margin-left:5px;"></i> موزّع الطلبة الذكي
+          </div>
+          <div style="display:flex;gap:15px;">
+            <span><i class="fas fa-file-excel" style="color:#4CAF50;margin-left:5px;"></i> {{ filename }}</span>
+            <span><i class="fas fa-calendar-alt" style="color:#FF9800;margin-left:5px;"></i> {{ now.strftime('%Y-%m-%d') if now else '' }}</span>
+          </div>
+        </div>
+      </div>
     {% endif %}
   </div>
 
+  <!-- أزرار التنقل العامة -->
+  <div class="global-nav-buttons">
+    <button class="global-nav-btn" id="scrollToTopBtn" title="ذهاب للأعلى">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <button class="global-nav-btn" id="scrollToBottomBtn" title="ذهاب للأسفل">
+      <i class="fas fa-arrow-down"></i>
+    </button>
+  </div>
+
   <script>
+    // تأثيرات عند التحميل
+    window.addEventListener('load', () => {
+      // تأثير fade in للصفحة
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.5s ease';
+      setTimeout(() => {
+        document.body.style.opacity = '1';
+      }, 100);
+
+      // تأثيرات للبطاقات
+      const cards = document.querySelectorAll('.card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.5s ease';
+        
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 100 + (index * 100));
+      });
+      
+      // ضبط ارتفاع الصفحة
+      adjustPageHeight();
+      
+      // إعداد أزرار التنقل للجداول
+      setupTableNavigation();
+    });
+
+    // دالة لضبط ارتفاع الصفحة
+    function adjustPageHeight() {
+      const body = document.body;
+      const html = document.documentElement;
+      const pageContent = document.querySelector('.page');
+      const footer = document.querySelector('.foot');
+      
+      if (!filename) {
+        const windowHeight = window.innerHeight;
+        const contentHeight = pageContent ? pageContent.offsetHeight : 0;
+        const footerHeight = footer ? footer.offsetHeight : 0;
+        const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
+        const subbarHeight = document.querySelector('.subbar')?.offsetHeight || 0;
+        
+        const totalUsedHeight = headerHeight + subbarHeight + contentHeight + footerHeight;
+        
+        if (totalUsedHeight < windowHeight) {
+          const centerWrap = document.querySelector('.centerWrap');
+          if (centerWrap) {
+            const neededHeight = windowHeight - totalUsedHeight;
+            centerWrap.style.minHeight = `calc(70vh + ${neededHeight}px)`;
+          }
+        }
+      }
+    }
+
+    // تحديث اسم الملف عند الاختيار
+    const fileInput = document.getElementById('excel_file');
+    const fileNameSpan = document.getElementById('fileName');
+    
+    if (fileInput && fileNameSpan) {
+      fileInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+          fileNameSpan.textContent = this.files[0].name;
+          fileNameSpan.style.color = 'var(--primary)';
+          fileNameSpan.style.fontWeight = '700';
+        } else {
+          fileNameSpan.textContent = 'لم يتم اختيار ملف';
+          fileNameSpan.style.color = 'var(--muted)';
+          fileNameSpan.style.fontWeight = '600';
+        }
+      });
+    }
+
     // dark mode
     const modeBtn = document.getElementById("modeBtn");
     const savedMode = localStorage.getItem("mode") || "light";
     if(savedMode === "dark") {
       document.body.classList.add("dark");
       modeBtn?.classList.add("active");
-      modeBtn && (modeBtn.textContent = "☀️");
+      modeBtn && (modeBtn.innerHTML = '<i class="fas fa-sun"></i>');
     }
 
     modeBtn?.addEventListener("click", () => {
@@ -612,7 +1568,7 @@
       const isDark = document.body.classList.contains("dark");
       localStorage.setItem("mode", isDark ? "dark" : "light");
       modeBtn.classList.toggle("active", isDark);
-      modeBtn.textContent = isDark ? "☀️" : "🌙";
+      modeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     });
 
     // tabs (شكل فقط)
@@ -639,6 +1595,215 @@
       if(v === "manual") el.removeAttribute("hidden");
       else el.setAttribute("hidden", "hidden");
     }
+
+    // تحسينات إضافية للتفاعل
+    document.querySelectorAll('input, select').forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+      });
+      
+      input.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+      });
+    });
+
+    // تحريك خلفية الشريط العلوي عند التمرير
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.header');
+      const scrolled = window.pageYOffset;
+      const rate = scrolled * -0.5;
+      header.style.backgroundPosition = `${rate}px 0`;
+    });
+
+    // إعادة ضبط الارتفاع عند تغيير حجم النافذة
+    window.addEventListener('resize', adjustPageHeight);
+
+    // تأثير الكتابة للنص الرئيسي
+    function typeWriterEffect() {
+      if (!filename) {
+        const title = document.querySelector('.main-title');
+        const subtitle = document.querySelector('.main-subtitle');
+        const description = document.querySelector('.main-description');
+        
+        if (title) {
+          const titleText = title.textContent;
+          title.textContent = '';
+          let i = 0;
+          
+          function typeTitle() {
+            if (i < titleText.length) {
+              title.textContent += titleText.charAt(i);
+              i++;
+              setTimeout(typeTitle, 80);
+            } else {
+              // بعد انتهاء كتابة العنوان، ابدأ بالعنوان الفرعي
+              if (subtitle) {
+                const subtitleText = subtitle.textContent;
+                subtitle.textContent = '';
+                let j = 0;
+                
+                function typeSubtitle() {
+                  if (j < subtitleText.length) {
+                    subtitle.textContent += subtitleText.charAt(j);
+                    j++;
+                    setTimeout(typeSubtitle, 60);
+                  }
+                }
+                
+                setTimeout(typeSubtitle, 300);
+              }
+            }
+          }
+          
+          setTimeout(typeTitle, 500);
+        }
+      }
+    }
+
+    // تفعيل تأثير الكتابة بعد التحميل
+    setTimeout(typeWriterEffect, 800);
+
+    // ===== دوال جديدة للتنقل في الجداول =====
+    function scrollTableLeft(tableId) {
+      const tableWrap = document.getElementById(tableId);
+      if (tableWrap) {
+        tableWrap.scrollBy({ left: -200, behavior: 'smooth' });
+      }
+    }
+
+    function scrollTableRight(tableId) {
+      const tableWrap = document.getElementById(tableId);
+      if (tableWrap) {
+        tableWrap.scrollBy({ left: 200, behavior: 'smooth' });
+      }
+    }
+
+    function setupTableNavigation() {
+      // إخفاء أزرار التنقل إذا كان الجدول لا يحتاج إلى تمرير أفقي
+      const tables = document.querySelectorAll('.tableWrap');
+      tables.forEach(table => {
+        const hasHorizontalScroll = table.scrollWidth > table.clientWidth;
+        const navButtons = table.querySelector('.table-nav-buttons');
+        
+        if (navButtons) {
+          navButtons.style.display = hasHorizontalScroll ? 'flex' : 'none';
+        }
+      });
+    }
+
+    // أزرار التنقل العامة
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    const scrollToBottomBtn = document.getElementById('scrollToBottomBtn');
+    
+    if (scrollToTopBtn) {
+      scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+    
+    if (scrollToBottomBtn) {
+      scrollToBottomBtn.addEventListener('click', () => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      });
+    }
+
+    // إظهار/إخفاء أزرار التنقل العامة عند التمرير
+    window.addEventListener('scroll', () => {
+      const globalNavButtons = document.querySelector('.global-nav-buttons');
+      if (globalNavButtons) {
+        if (window.scrollY > 300) {
+          globalNavButtons.style.opacity = '1';
+          globalNavButtons.style.visibility = 'visible';
+        } else {
+          globalNavButtons.style.opacity = '0';
+          globalNavButtons.style.visibility = 'hidden';
+        }
+      }
+      
+      // تحديث أزرار التنقل للجداول عند تغيير حجم النافذة
+      setupTableNavigation();
+    });
+
+    // التحكم في الجداول بالسحب (drag)
+    const tableWraps = document.querySelectorAll('.tableWrap');
+    tableWraps.forEach(tableWrap => {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      
+      tableWrap.addEventListener('mousedown', (e) => {
+        isDown = true;
+        tableWrap.style.cursor = 'grabbing';
+        startX = e.pageX - tableWrap.offsetLeft;
+        scrollLeft = tableWrap.scrollLeft;
+      });
+      
+      tableWrap.addEventListener('mouseleave', () => {
+        isDown = false;
+        tableWrap.style.cursor = 'grab';
+      });
+      
+      tableWrap.addEventListener('mouseup', () => {
+        isDown = false;
+        tableWrap.style.cursor = 'grab';
+      });
+      
+      tableWrap.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - tableWrap.offsetLeft;
+        const walk = (x - startX) * 2; // سرعة السحب
+        tableWrap.scrollLeft = scrollLeft - walk;
+      });
+      
+      // جعل مؤشر الفأرة مناسبًا للسحب
+      tableWrap.style.cursor = 'grab';
+    });
+
+    // دعم اللمس للجداول (للأجهزة المحمولة)
+    tableWraps.forEach(tableWrap => {
+      let startX = 0;
+      let scrollLeft = 0;
+      
+      tableWrap.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].pageX;
+        scrollLeft = tableWrap.scrollLeft;
+      });
+      
+      tableWrap.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const x = e.touches[0].pageX;
+        const walk = (x - startX) * 1.5;
+        tableWrap.scrollLeft = scrollLeft - walk;
+      });
+    });
+
+    // الكشف عن المفاتيح للتنقل
+    document.addEventListener('keydown', (e) => {
+      const activeTableWrap = document.querySelector('.tableWrap:hover');
+      if (activeTableWrap) {
+        if (e.key === 'ArrowLeft') {
+          activeTableWrap.scrollBy({ left: -100, behavior: 'smooth' });
+        } else if (e.key === 'ArrowRight') {
+          activeTableWrap.scrollBy({ left: 100, behavior: 'smooth' });
+        }
+      }
+    });
+
+    // تحديث أزرار التنقل عند التمرير في الجدول
+    tableWraps.forEach(tableWrap => {
+      tableWrap.addEventListener('scroll', () => {
+        const navButtons = tableWrap.querySelector('.table-nav-buttons');
+        if (navButtons) {
+          // إخفاء الأزرار مؤقتًا أثناء التمرير لإعطاء مساحة
+          navButtons.style.opacity = '0.6';
+          
+          setTimeout(() => {
+            navButtons.style.opacity = '1';
+          }, 300);
+        }
+      });
+    });
   </script>
 
 </body>

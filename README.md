@@ -152,7 +152,7 @@ Add screenshots of the web interface below.
 
 Example:
 
-![Home Page](screenshots/home.png)
+![Home Page](screenshots/home.jpg)
 
 
 ## Troubleshooting
@@ -177,10 +177,6 @@ Unknown admission channel
 Ensure values are one of:
 General, Martyrs, Parallel
 
-
-## License
-
-This project is licensed under the MIT License.
 
 ## Author
 Developed by:
